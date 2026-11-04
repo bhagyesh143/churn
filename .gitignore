@@ -1,0 +1,83 @@
+# ==============================
+# Python Environments
+# ==============================
+venv/
+env/
+.venv/
+ENV/
+
+# ==============================
+# Python Cache Files
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==============================
+# Jupyter Notebook
+# ==============================
+.ipynb_checkpoints/
+
+# ==============================
+# Data Files
+# ==============================
+data/processed/*.npy
+
+# ==============================
+# Model Artifacts
+# ==============================
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.keras
+models/*.pt
+models/*.pth
+
+# ==============================
+# MLflow Tracking Data
+# ==============================
+mlruns/
+*.db
+*.db-shm
+*.db-wal
+
+# ==============================
+# Logs
+# ==============================
+logs/
+*.log
+
+# ==============================
+# Generated Outputs
+# ==============================
+outputs/
+artifacts/
+
+# ==============================
+# IDE Settings
+# ==============================
+.vscode/
+.idea/
+
+# ==============================
+# Operating System Files
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Secrets and Environment Variables
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Temporary Files
+# ==============================
+*.tmp
+*.bak
+*.swp
+# Deployment backups
+deployment_backup*/

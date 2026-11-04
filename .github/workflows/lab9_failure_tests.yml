@@ -1,0 +1,56 @@
+name: Lab 9 Failure Handling Tests
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  failure-injection-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify Required Files
+        run: |
+          test -f config.yaml
+          test -f data/raw/churn.csv
+          test -f src/mlops_pipeline/10_failure_injection.py
+
+      - name: Run Failure Injection
+        run: |
+          python src/mlops_pipeline/10_failure_injection.py
+
+      - name: Verify Failure Reports
+        run: |
+          test -f artifacts/failure_simulation_report.json
+          test -f artifacts/corrupted_simulation_errors.csv
+
+      - name: Display Failure Report
+        run: |
+          cat artifacts/failure_simulation_report.json
+
+      - name: Upload Lab 9 Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lab9-failure-test-results
+          path: |
+            artifacts/failure_simulation_report.json
+            artifacts/corrupted_simulation_errors.csv
+          if-no-files-found: warn

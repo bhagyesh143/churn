@@ -1,0 +1,12 @@
+{
+    "model_name": "Telco_Churn_Production_Model",
+    "model_version": "6",
+    "model_stage": "Production",
+    "run_id": "5d44f167302344bba50acd0f2e1475d9",
+    "model_source": "models:/m-99e423ec5c0b48e7ba611efd74a5245f",
+    "model_id": "m-99e423ec5c0b48e7ba611efd74a5245f",
+    "preprocessor_artifact": "preprocessing_pipeline_v2/retrained_preprocessor_v2.pkl",
+    "tracking_uri": "sqlite:///mlflow.db",
+    "source": "MLflow local artifacts",
+    "expected_features": 30
+}

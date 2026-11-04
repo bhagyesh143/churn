@@ -1,0 +1,47 @@
+{
+    "dataset_name": "Telco Customer Churn",
+    "target_column": "Churn",
+    "train_shape_raw": [
+        5634,
+        19
+    ],
+    "test_shape_raw": [
+        1409,
+        19
+    ],
+    "train_shape_transformed": [
+        5634,
+        30
+    ],
+    "test_shape_transformed": [
+        1409,
+        30
+    ],
+    "numerical_features": [
+        "SeniorCitizen",
+        "tenure",
+        "MonthlyCharges",
+        "TotalCharges"
+    ],
+    "categorical_features": [
+        "gender",
+        "Partner",
+        "Dependents",
+        "PhoneService",
+        "MultipleLines",
+        "InternetService",
+        "OnlineSecurity",
+        "OnlineBackup",
+        "DeviceProtection",
+        "TechSupport",
+        "StreamingTV",
+        "StreamingMovies",
+        "Contract",
+        "PaperlessBilling",
+        "PaymentMethod"
+    ],
+    "split_test_size": 0.2,
+    "split_random_state": 42,
+    "raw_train_path": "data/processed/X_train_raw.csv",
+    "raw_test_path": "data/processed/X_test_raw.csv"
+}
