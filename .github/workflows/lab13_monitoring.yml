@@ -9,7 +9,7 @@ on:
 
 jobs:
   mlops-monitoring:
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: [self-hosted, Macos,ARM64]
 
     steps:
       - name: Run MLOps monitoring trigger
