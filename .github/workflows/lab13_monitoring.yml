@@ -15,13 +15,13 @@ jobs:
       - name: Run MLOps monitoring trigger
         shell: powershell
         run: |
-          Set-Location "C:\Users\jnane\Favorites\churn-prediction"
+          Set-Location "/Users/bhagyeshannamareddy/Downloads/Churn prediction 3"
           & ".\venv\Scripts\python.exe" ".\src\mlops_pipeline\12_monitor_trigger.py"
 
       - name: Show monitoring result
         shell: powershell
         run: |
-          Set-Location "C:\Users\jnane\Favorites\churn-prediction"
+          Set-Location "/Users/bhagyeshannamareddy/Downloads/Churn prediction 3"
           if (Test-Path ".\outputs\monitoring\monitor_trigger_report.json") {
               Get-Content ".\outputs\monitoring\monitor_trigger_report.json"
           } else {
