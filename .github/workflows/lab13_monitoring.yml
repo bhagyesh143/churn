@@ -1,35 +1,72 @@
 name: Lab 13 - End-to-End MLOps
-# Integration test: process a genuinely new incoming batch
 
 on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner environment"
+        required: true
+        default: "ubuntu-latest"
+        type: choice
+        options:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "self-hosted"
   schedule:
+    # Runs at minute 17 past every hour in UTC (GitHub Actions standard cron)
     - cron: "17 * * * *"
-      timezone: "Asia/Kolkata"
 
 jobs:
   mlops-monitoring:
-    runs-on: [self-hosted, Macos,ARM64]
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
 
     steps:
-      - name: Run MLOps monitoring trigger
-        shell: powershell
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
         run: |
-          Set-Location "/Users/bhagyeshannamareddy/Downloads/Churn prediction 3"
-          & ".\venv\Scripts\python.exe" ".\src\mlops_pipeline\12_monitor_trigger.py"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run MLOps monitoring trigger
+        run: |
+          python src/mlops_pipeline/12_monitor_trigger.py
 
       - name: Show monitoring result
-        shell: powershell
         run: |
-          Set-Location "/Users/bhagyeshannamareddy/Downloads/Churn prediction 3"
-          if (Test-Path ".\outputs\monitoring\monitor_trigger_report.json") {
-              Get-Content ".\outputs\monitoring\monitor_trigger_report.json"
-          } else {
-              Write-Host "Monitoring report was not generated."
-          }
+          if [ -f "outputs/monitoring/monitor_trigger_report.json" ]; then
+            cat "outputs/monitoring/monitor_trigger_report.json"
+          else
+            echo "Monitoring report was not generated."
+          fi
 
       - name: Verify Kubernetes
-        shell: powershell
         run: |
-          kubectl get deployment churn-api
-          kubectl get pods
+          if command -v kubectl >/dev/null 2>&1; then
+            kubectl get deployment churn-api 2>/dev/null || echo "[INFO] No deployment 'churn-api' found or cluster not active."
+            kubectl get pods 2>/dev/null || echo "[INFO] No pods found or cluster not active."
+          else
+            echo "[INFO] kubectl is not installed in this environment."
+          fi
+
+      - name: Upload Monitoring Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lab13-monitoring-reports
+          path: |
+            outputs/monitoring/monitor_trigger_report.json
+            outputs/drift/drift_analysis_report.csv
+            logs/churn_prediction_pipeline_run_log.json
+          if-no-files-found: warn

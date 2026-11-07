@@ -118,6 +118,20 @@ def prepare_deployment():
         / "retrained_preprocessor_v2.pkl"
     )
 
+    if not local_preprocessor_path.is_file():
+        local_preprocessor_path = (
+            project_root
+            / "mlruns"
+            / "1"
+            / run_id
+            / "artifacts"
+            / "preprocessing_pipeline"
+            / "preprocessor.pkl"
+        )
+
+    if not local_preprocessor_path.is_file():
+        local_preprocessor_path = project_root / config["paths"]["preprocessor"]
+
     if not (local_model_path / "MLmodel").is_file():
         raise FileNotFoundError(
             f"Production model artifact not found: {local_model_path}"
@@ -206,8 +220,9 @@ def prepare_deployment():
             "model_source": model_source,
             "model_id": model_id,
             "preprocessor_artifact": (
-                "preprocessing_pipeline_v2/"
-                "retrained_preprocessor_v2.pkl"
+                "preprocessing_pipeline_v2/retrained_preprocessor_v2.pkl"
+                if "preprocessing_pipeline_v2" in str(local_preprocessor_path)
+                else "preprocessing_pipeline/preprocessor.pkl"
             ),
             "tracking_uri": tracking_uri,
             "source": "MLflow local artifacts",

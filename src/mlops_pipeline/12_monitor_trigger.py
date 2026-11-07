@@ -18,6 +18,15 @@ DATA_LOAD_REPORT = Path("artifacts/data_load_report.json")
 
 def run_drift_analysis():
     print("[INFO] Running drift analysis...")
+    drift_prereqs = [
+        Path("src/mlops_pipeline/12_data_drift.py"),
+        Path("src/mlops_pipeline/12_prediction_drift.py"),
+        Path("src/mlops_pipeline/12_concept_drift.py"),
+    ]
+    for prereq in drift_prereqs:
+        if prereq.exists():
+            subprocess.run([sys.executable, str(prereq)])
+
     result = subprocess.run([sys.executable, str(DRIFT_SCRIPT)])
     return result.returncode == 0
 

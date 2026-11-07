@@ -4,32 +4,60 @@ on:
   push:
     branches:
       - lab13-integration
+      - master
+      - main
+  pull_request:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner environment"
+        required: true
+        default: "ubuntu-latest"
+        type: choice
+        options:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "self-hosted"
 
 jobs:
   test-runner:
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Check Python
-        shell: powershell
         run: python --version
 
       - name: Check Git
-        shell: powershell
         run: git --version
 
       - name: Check Docker
-        shell: powershell
-        run: docker info
+        run: |
+          if command -v docker >/dev/null 2>&1; then
+            docker --version
+          else
+            echo "[INFO] Docker CLI is not installed or not active."
+          fi
 
       - name: Check Kubernetes
-        shell: powershell
-        run: kubectl get nodes
+        run: |
+          if command -v kubectl >/dev/null 2>&1; then
+            kubectl version --client || true
+          else
+            echo "[INFO] kubectl is not installed."
+          fi
 
       - name: Check Project
-        shell: powershell
         run: |
-          Write-Host "Runner: $env:RUNNER_NAME"
-          Write-Host "Workspace: $env:GITHUB_WORKSPACE"
-          Test-Path "C:\Users\jnane\Favorites\churn-prediction"
+          echo "Runner: $RUNNER_NAME"
+          echo "Workspace: $GITHUB_WORKSPACE"
+          test -f config.yaml && echo "[OK] config.yaml exists"
+          test -f data/raw/churn.csv && echo "[OK] churn.csv exists"
+          test -f src/mlops_pipeline/churn_prediction_pipeline.py && echo "[OK] pipeline script exists"

@@ -22,6 +22,7 @@ def load_data():
 
     report = {
         "stage": "ML Pipeline - Data Loading",
+        "status": "ingested",
         "source_file": data_path,
         "rows": int(df.shape[0]),
         "columns": int(df.shape[1]),
