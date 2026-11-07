@@ -62,11 +62,20 @@ def save_trigger_report(report):
         json.dump(report, f, indent=4, default=str)
 
 
+def ensure_preprocessed_data():
+    y_test_path = Path("data/processed/y_test.npy")
+    x_test_path = Path("data/processed/X_test_raw.csv")
+    if not y_test_path.exists() or not x_test_path.exists():
+        print("[INFO] Preprocessed baseline artifacts missing. Generating them...")
+        subprocess.run([sys.executable, "src/mlops_pipeline/03_preprocessing.py"], check=True)
+
+
 def run_monitor_trigger():
     print("=" * 70)
     print("LAB 13 MONITORING + RETRAINING TRIGGER")
     print("=" * 70)
 
+    ensure_preprocessed_data()
     drift_analysis_passed = run_drift_analysis()
 
     if not drift_analysis_passed:

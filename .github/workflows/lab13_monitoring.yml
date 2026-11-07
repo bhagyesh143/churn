@@ -39,6 +39,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Ensure Baseline Preprocessing
+        run: |
+          python src/mlops_pipeline/03_preprocessing.py
+
       - name: Run MLOps monitoring trigger
         run: |
           python src/mlops_pipeline/12_monitor_trigger.py

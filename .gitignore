@@ -22,6 +22,8 @@ __pycache__/
 # Data Files
 # ==============================
 data/processed/*.npy
+!data/processed/y_test.npy
+!data/processed/y_train.npy
 
 # ==============================
 # Model Artifacts

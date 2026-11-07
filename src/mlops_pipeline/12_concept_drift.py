@@ -38,6 +38,10 @@ def main():
     print("CONCEPT DRIFT ANALYSIS")
     print("=" * 70)
 
+    if not BASELINE_Y_PATH.exists():
+        import subprocess
+        subprocess.run([sys.executable, "src/mlops_pipeline/03_preprocessing.py"], check=True)
+
     baseline_X = pd.read_csv(BASELINE_X_PATH)
     baseline_y = np.load(BASELINE_Y_PATH)
 
